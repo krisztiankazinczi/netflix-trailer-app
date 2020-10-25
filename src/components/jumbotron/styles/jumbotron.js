@@ -65,4 +65,25 @@ export const SubTitle = styled.h2`
 export const Image = styled.img`
   max-width: 100%;
   height: auto;
+  position: relative;
+  z-index: 2;
+`;
+
+export const Animation = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: ${({ maxWidth }) => maxWidth};
+  max-height: ${({ maxHeight }) => maxHeight};
+  top: ${({ top }) => top};
+  left: ${({ left }) => left};
+  transform: translate(-50%, -50%);
+  z-index: 1;
+`;
+
+export const Video = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: inline-block;
 `;

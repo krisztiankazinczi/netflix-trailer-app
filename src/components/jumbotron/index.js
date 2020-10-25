@@ -8,6 +8,8 @@ import {
   Title,
   SubTitle,
   Image,
+  Animation,
+  Video,
 } from "./styles/jumbotron";
 
 const Jumbotron = ({ children, direction = "row", ...restProps }) => {
@@ -36,6 +38,18 @@ Jumbotron.SubTitle = function JumbotronContainer({ children, ...restProps }) {
 
 Jumbotron.Image = function JumbotronContainer({ ...restProps }) {
   return <Image {...restProps} />;
+};
+
+Jumbotron.Animation = function JumbotronContainer({ children, ...restProps }) {
+  return <Animation {...restProps}>{children}</Animation>;
+};
+
+Jumbotron.Video = function JumbotronContainer({ children, ...restProps }) {
+  return (
+    <Video autoPlay muted loop {...restProps}>
+      {children}
+    </Video>
+  );
 };
 
 export default Jumbotron;
