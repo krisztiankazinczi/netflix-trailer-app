@@ -68,9 +68,12 @@ function Signin() {
               Sign In
             </Form.Submit>
           </Form.Base>
-          <Form.Text onClick={handleSignInWithFacebook}>
-            Login with Facebook
-          </Form.Text>
+          <Form.Row>
+            <Form.Logo src="/images/icons/fb-logo.png" alt="Facebook Logo" />
+            <Form.TextSmall onClick={handleSignInWithFacebook} cursor={true}>
+              Login with Facebook
+            </Form.TextSmall>
+          </Form.Row>
           <Form.Text>
             New to Netflix?{" "}
             <Form.Link to={ROUTES.SIGN_UP}>Sign up now.</Form.Link>

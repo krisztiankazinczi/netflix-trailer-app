@@ -9,6 +9,9 @@ import {
   Link,
   Input,
   Submit,
+  Row,
+  Logo,
+  FbButton,
 } from "./styles/form";
 
 const Form = ({ children, ...restProps }) => {
@@ -45,6 +48,16 @@ Form.Input = ({ children, ...restProps }) => (
 
 Form.Submit = ({ children, ...restProps }) => (
   <Submit {...restProps}>{children}</Submit>
+);
+
+Form.Row = ({ children, ...restProps }) => <Row {...restProps}>{children}</Row>;
+
+Form.Logo = ({ children, ...restProps }) => (
+  <Logo {...restProps}>{children}</Logo>
+);
+
+Form.FbButton = ({ children, ...restProps }) => (
+  <FbButton {...restProps}>{children}</FbButton>
 );
 
 export default Form;

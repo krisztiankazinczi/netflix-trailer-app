@@ -49,6 +49,7 @@ export const TextSmall = styled.p`
   font-size: 13px;
   line-height: normal;
   color: #8c8c8c;
+  cursor: ${({ cursor }) => (cursor ? "pointer" : "text")};
 `;
 
 export const Link = styled(ReactRouterLink)`
@@ -89,4 +90,31 @@ export const Submit = styled.button`
   &:disabled {
     opacity: 0.5;
   }
+`;
+
+export const FbButton = styled.button`
+  background: #4267b2;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 24px 0 12px;
+  padding: 16px;
+  border: 0;
+  color: white;
+  cursor: pointer;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Logo = styled.img`
+  object-fit: contain;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 `;
