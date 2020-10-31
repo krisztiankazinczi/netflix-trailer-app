@@ -5,19 +5,30 @@ import axios from "./axios";
 import { Home, Browse, Signin, Signup } from "./pages";
 import { IsUserRedirect, ProtectedRoute } from "./helpers/routes";
 import { useAuthListener } from "./hooks";
+import { useMoviesDispatch } from "./contexts/movies";
 
 import * as ROUTES from "./constants/routes";
 
+async function fetchCategories(mainCategory, url, dispatch) {
+  const request = await axios.get(url);
+  dispatch({
+    type: "GET_CATEGORIES",
+    payload: {
+      mainCategory,
+      data: request.data.genres,
+    },
+  });
+}
+
 const App = () => {
   const { user } = useAuthListener();
+  const dispatch = useMoviesDispatch();
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const request = await axios.get(urls.discover);
-  //     console.log(request.data);
-  //   }
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    // fetch movie categories from MovieDB Database
+    fetchCategories("films", urls.categories_movie, dispatch);
+    fetchCategories("series", urls.categories_series, dispatch);
+  }, [dispatch]);
 
   return (
     <Router>

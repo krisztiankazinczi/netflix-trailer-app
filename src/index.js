@@ -6,12 +6,15 @@ import "normalize.css";
 // for some reason there is a margin around components, which will disappear with this normalize.css
 import { firebase } from "./lib/firebase.prod";
 import { FirebaseContext } from "./contexts/firebase";
+import { MoviesProvider } from "./contexts/movies";
 
 render(
   <>
     <FirebaseContext.Provider value={{ firebase }}>
-      <GlobalStyles />
-      <App />
+      <MoviesProvider>
+        <GlobalStyles />
+        <App />
+      </MoviesProvider>
     </FirebaseContext.Provider>
   </>,
   document.getElementById("root")
