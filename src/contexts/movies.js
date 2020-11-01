@@ -14,6 +14,15 @@ const moviesReducer = (state, action) => {
         },
       };
 
+    case "GET_TRENDING":
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          [action.payload.mainCategory]: action.payload.data,
+        },
+      };
+
     case "ADD_MOVIES_TO_CATEGORY":
       if (
         state.movies[action.payload.mainCategory] !== null &&

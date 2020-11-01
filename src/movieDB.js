@@ -5,7 +5,7 @@ const fetchingURLs = {
   categories_series: `/genre/tv/list?api_key=${API_KEY}&language=en-US`,
   discoverMovies: `/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page={page}&with_genres={genre}`,
   discoverTVSeries: `/discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page={page}&with_genres={genre}`,
-  trending: `/trending/all/week?api_key=${API_KEY}&language=en-US`,
+  trending: `/trending/all/week?api_key=${API_KEY}`,
 };
 
 export default fetchingURLs;

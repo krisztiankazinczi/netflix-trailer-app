@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import axios from "../axios";
 import { useMoviesDispatch } from "../contexts/movies";
+import selectionMap from "../utils/selectionMap";
 
 async function fetchData(dispatch, fetchUrl, category, mainCategory) {
   const request = await axios.get(fetchUrl);
+  const mappedNecessaryData = selectionMap(request.data.results);
   dispatch({
     type: "ADD_MOVIES_TO_CATEGORY",
-    payload: { mainCategory, category: category, data: request.data.results },
+    payload: { mainCategory, category: category, data: mappedNecessaryData },
   });
   return request.data.results;
 }

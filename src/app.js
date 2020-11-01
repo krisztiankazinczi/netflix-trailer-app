@@ -6,6 +6,7 @@ import { Home, Browse, Signin, Signup } from "./pages";
 import { IsUserRedirect, ProtectedRoute } from "./helpers/routes";
 import { useAuthListener } from "./hooks";
 import { useMoviesDispatch } from "./contexts/movies";
+import selectionMap from "./utils/selectionMap";
 
 import * as ROUTES from "./constants/routes";
 
@@ -20,14 +21,27 @@ async function fetchCategories(mainCategory, url, dispatch) {
   });
 }
 
+async function fetchTrending(mainCategory, url, dispatch) {
+  const request = await axios.get(url);
+  const trendingMovies = selectionMap(request.data.results);
+  dispatch({
+    type: "GET_TRENDING",
+    payload: {
+      mainCategory,
+      data: trendingMovies,
+    },
+  });
+}
+
 const App = () => {
   const { user } = useAuthListener();
   const dispatch = useMoviesDispatch();
 
   useEffect(() => {
     // fetch movie categories from MovieDB Database
-    fetchCategories("films", urls.categories_movie, dispatch);
-    fetchCategories("series", urls.categories_series, dispatch);
+    // fetchCategories("films", urls.categories_movie, dispatch);
+    // fetchCategories("series", urls.categories_series, dispatch);
+    fetchTrending("trending", urls.trending, dispatch);
   }, [dispatch]);
 
   return (
