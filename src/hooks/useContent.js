@@ -19,16 +19,19 @@ const useContent = (mainCategory, categories, url) => {
   useEffect(() => {
     if (!categories) return;
 
-    categories.forEach((category) => {
-      let page = 1;
-      let fetchURL = url.replace("{page}", page);
-      fetchURL = fetchURL.replace("{genre}", category.id);
+    categories.forEach((category, idx) => {
+      if (idx < 2) {
+        let page = 1;
+        let fetchURL = url.replace("{page}", page);
+        fetchURL = fetchURL.replace("{genre}", category.id);
 
-      fetchData(dispatch, fetchURL, category.name, mainCategory);
+        fetchData(dispatch, fetchURL, category.name, mainCategory);
 
-      page = 2;
-      fetchURL = fetchURL.replace("{page}", page);
-      fetchData(dispatch, fetchURL, category.name, mainCategory);
+        page = 2;
+        fetchURL = url.replace("{page}", page);
+        fetchURL = fetchURL.replace("{genre}", category.id);
+        fetchData(dispatch, fetchURL, category.name, mainCategory);
+      }
     });
   }, [categories, dispatch, url]);
 };

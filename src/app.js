@@ -39,8 +39,8 @@ const App = () => {
 
   useEffect(() => {
     // fetch movie categories from MovieDB Database
-    // fetchCategories("films", urls.categories_movie, dispatch);
-    // fetchCategories("series", urls.categories_series, dispatch);
+    fetchCategories("films", urls.categories_movie, dispatch);
+    fetchCategories("series", urls.categories_series, dispatch);
     fetchTrending("trending", urls.trending, dispatch);
   }, [dispatch]);
 

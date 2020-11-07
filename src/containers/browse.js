@@ -1,22 +1,32 @@
 import React, { useState, useEffect, useContext } from "react";
 import SelectProfileContainer from "./profiles";
+import { FooterContainer } from "./footer";
 import { FirebaseContext } from "../contexts/firebase";
-import { Header, Loading } from "../components";
+import { Header, Loading, Card, Player } from "../components";
 import * as ROUTES from "../constants/routes";
 import logo from "../logo.svg";
+import descriptionShortener from "../utils/descriptionShortener";
 
 const BrowseContainer = ({ movies, randomMovie }) => {
+  const [category, setCategory] = useState("series");
+  const [rows, setRows] = useState(null);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
   const { firebase } = useContext(FirebaseContext);
   const user = firebase.auth().currentUser || {};
   const [searchTerm, setSearchTerm] = useState("");
+  // const [selectedMovieTitle, setSelectedMovieTitle] = useState("");
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 3000);
   }, [profile.displayName]);
+
+  // show films or tv series
+  useEffect(() => {
+    setRows(movies[category]);
+  }, [movies, category]);
 
   return profile.displayName ? (
     <>
@@ -26,8 +36,16 @@ const BrowseContainer = ({ movies, randomMovie }) => {
         <Header.Frame>
           <Header.Group>
             <Header.Logo to={ROUTES.HOME} alt="Netflix" src={logo} />
-            <Header.TextLink>Series</Header.TextLink>
-            <Header.TextLink>Films</Header.TextLink>
+            <Header.TextLink
+              active={category === "series" ? "true" : "false"}
+              onClick={() => setCategory("series")}>
+              Series
+            </Header.TextLink>
+            <Header.TextLink
+              active={category === "films" ? "true" : "false"}
+              onClick={() => setCategory("films")}>
+              Films
+            </Header.TextLink>
           </Header.Group>
           <Header.Group>
             <Header.Search
@@ -58,6 +76,50 @@ const BrowseContainer = ({ movies, randomMovie }) => {
           <Header.PlayButton>Play</Header.PlayButton>
         </Header.Feature>
       </Header>
+      {rows && (
+        <Card.Group>
+          {Object.values(rows).map((rowItem, id) => (
+            <Card key={`${rowItem.category}-${Math.random() * 1000}`}>
+              <Card.Title>{rowItem.category}</Card.Title>
+              <Card.Entities>
+                {rowItem.data.map(
+                  (item) =>
+                    item && (
+                      <Card.Item
+                        key={item.id}
+                        item={item}
+                        // setSelectedMovieTitle={setSelectedMovieTitle}
+                      >
+                        <Card.Image
+                          src={item.poster}
+                          // onClick={() => setSelectedMovieTitle(item.title)}
+                        />
+                        <Card.Meta>
+                          <Card.SubTitle>{item.title}</Card.SubTitle>
+                          <Card.Text>
+                            {descriptionShortener(item.description)}
+                          </Card.Text>
+                          <br />
+                        </Card.Meta>
+                      </Card.Item>
+                    )
+                )}
+              </Card.Entities>
+              <Card.Feature category={category}>
+                <Player>
+                  <Player.Button />
+                  <Player.Video
+                    // title={selectedMovieTitle}
+                    // setSelectedMovieTitle={setSelectedMovieTitle}
+                    src="/videos/bunny.mp4"
+                  />
+                </Player>
+              </Card.Feature>
+            </Card>
+          ))}
+        </Card.Group>
+      )}
+      <FooterContainer />
     </>
   ) : (
     <SelectProfileContainer user={user} setProfile={setProfile} />
