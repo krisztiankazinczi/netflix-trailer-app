@@ -13,11 +13,10 @@ const Browse = () => {
     setRandomMovie(
       movies.trending[Math.floor(Math.random() * movies.trending.length + 1)]
     );
-    console.log(randomMovie);
   }, [movies?.trending]);
 
-  // useContent("films", categories?.films, urls.discoverMovies);
-  // useContent("series", categories?.series, urls.discoverTVSeries);
+  useContent("films", categories?.films, urls.discoverMovies);
+  useContent("series", categories?.series, urls.discoverTVSeries);
 
   return <BrowseContainer movies={movies} randomMovie={randomMovie} />;
 };

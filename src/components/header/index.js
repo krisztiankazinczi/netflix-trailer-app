@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { usePlayerState } from "../../contexts/player";
+
 
 import {
   Background,
@@ -40,9 +42,16 @@ Header.Dropdown = ({ children, ...restProps }) => (
   <Dropdown {...restProps}>{children}</Dropdown>
 );
 
-Header.PlayButton = ({ children, ...restProps }) => (
-  <PlayButton {...restProps}>{children}</PlayButton>
-);
+Header.PlayButton = function HeaderPlayButton({ children, movieTitle, ...restProps }) {
+  const { setSelectedMovieTitle, setShowPlayer, showPlayer } = usePlayerState();
+
+  const handleClick = (title) => {
+    setSelectedMovieTitle(title)
+    setShowPlayer(true)
+  }
+  return <PlayButton {...restProps} onClick={() => handleClick(movieTitle)}>{children}</PlayButton>
+
+}
 
 Header.Picture = ({ src, ...restProps }) => (
   <Picture {...restProps} src={`/images/users/${src}.png`} />

@@ -36,6 +36,9 @@ const moviesReducer = (state, action) => {
             [action.payload.mainCategory]: {
               ...state.movies[action.payload.mainCategory],
               [action.payload.category]: {
+                ...state.movies[action.payload.mainCategory][
+                  action.payload.category
+                ],
                 page: (state.movies[action.payload.mainCategory][
                   action.payload.category
                 ].page += 1),
@@ -60,6 +63,7 @@ const moviesReducer = (state, action) => {
             [action.payload.category]: {
               page: 1,
               data: action.payload.data,
+              category: action.payload.category,
             },
           },
         },
