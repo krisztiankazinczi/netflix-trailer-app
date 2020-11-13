@@ -1,5 +1,7 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useRef, useCallback, forwardRef } from "react";
 import { usePlayerState } from "../../contexts/player";
+import descriptionShortener from "../../utils/descriptionShortener";
+import useLoadMovies from "../../hooks/useLoadMovies";
 
 import {
   Container,
@@ -51,15 +53,86 @@ Card.Text = ({ children, ...restProps }) => (
 );
 
 // holds all the movies or series in a category
-Card.Entities = ({ children, ...restProps }) => (
-  <Entities {...restProps}>{children}</Entities>
-);
+// infinite scrolling component
+Card.Entities = function CardEntities({ rowItem, mainCategory, ...restProps }) {
+  const { 
+    loading, 
+    error, 
+    loadNewMoviesInCategory 
+  } = useLoadMovies(mainCategory, rowItem.category);
+
+  const observer = useRef(null);
+  const lastMovieElementRef = useCallback(node => {
+    // I disconnect the previous observer if more data is fetched down
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        loadNewMoviesInCategory()
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, [])
+
+  return (
+    <Entities 
+      {...restProps}
+    >
+      {rowItem.data.map(
+        (item, index) => {
+          if (rowItem.data.length === index + 1) {
+            return (
+              item && (
+                <Card.Item
+                  ref={lastMovieElementRef}
+                  key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
+                  item={item}
+                >
+                  <Card.Image
+                    src={item.poster}
+                  />
+                  <Card.Meta>
+                    <Card.SubTitle>{item.title}</Card.SubTitle>
+                    <Card.Text>
+                      {descriptionShortener(item.description)}
+                    </Card.Text>
+                  </Card.Meta>
+                </Card.Item>
+              )
+            )
+          } else {
+            return (
+              item && (
+                <Card.Item
+                  key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
+                  item={item}
+                >
+                  <Card.Image
+                    src={item.poster}
+                  />
+                  <Card.Meta>
+                    <Card.SubTitle>{item.title}</Card.SubTitle>
+                    <Card.Text>
+                      {descriptionShortener(item.description)}
+                    </Card.Text>
+                  </Card.Meta>
+                </Card.Item>
+              )
+            )
+          }
+        }
+          
+      )}
+    </Entities>
+  ) 
+}
+
 
 Card.Meta = ({ children, ...restProps }) => (
   <Meta {...restProps}>{children}</Meta>
 );
 
-Card.Item = function CardItem({ item, children, ...restProps }) {
+// with this wrapped component, I can pass ref props to this component!!!! Without this it's not working
+Card.Item = forwardRef(({ item, children, ...restProps }, ref) => {
   const { setShowFeature, setItemFeature } = useContext(FeatureContext);
   const { setSelectedMovieTitle } = usePlayerState();
 
@@ -71,12 +144,13 @@ Card.Item = function CardItem({ item, children, ...restProps }) {
 
   return (
     <Item
+      ref={ref}
       onClick={handleClick}
       {...restProps}>
       {children}
     </Item>
   );
-};
+});
 
 Card.Image = ({ ...restProps }) => <Image {...restProps} />;
 

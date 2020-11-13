@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+
 import SelectProfileContainer from "./profiles";
 import { FooterContainer } from "./footer";
 import { FirebaseContext } from "../contexts/firebase";
@@ -7,6 +8,8 @@ import * as ROUTES from "../constants/routes";
 import logo from "../logo.svg";
 import descriptionShortener from "../utils/descriptionShortener";
 import { PlayerProvider } from "../contexts/player";
+import movieSearch from "../utils/movieSearch";
+import urls from '../movieDB';
 
 
 const BrowseContainer = ({ movies, randomMovie }) => {
@@ -35,27 +38,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
 
     const lowercaseSearchTerm = searchTerm.toLowerCase();
 
-    const filteredMovies = {};
-
-    Object.entries(movies[category]).forEach(([cat, movies]) => {
-
-      movies.data.forEach(movie => {
-        if (movie.description.toLowerCase().includes(lowercaseSearchTerm) || movie.title.toLowerCase().includes(lowercaseSearchTerm)) {
-          if (!filteredMovies[cat]) {
-            filteredMovies[cat] = {
-              ...movies,
-              data: [movie]
-            }
-          } else {
-            filteredMovies[cat].data = [
-              ...filteredMovies[cat].data,
-              movie
-            ]
-          }
-        }
-      });
-
-    });
+    const filteredMovies = movieSearch(movies[category], lowercaseSearchTerm);
 
     if (Object.keys(filteredMovies).length > 0) {
       setRows(filteredMovies);
@@ -63,7 +46,9 @@ const BrowseContainer = ({ movies, randomMovie }) => {
       setRows(null);
     }
 
-  }, [searchTerm])
+  }, [searchTerm]);
+
+
 
   return profile.displayName ? (
     <>
@@ -122,27 +107,10 @@ const BrowseContainer = ({ movies, randomMovie }) => {
             {Object.values(rows).map((rowItem, id) => (
               <Card key={`${rowItem.category}-${Math.random() * 1000}`}>
                 <Card.Title>{rowItem.category}</Card.Title>
-                <Card.Entities>
-                  {rowItem.data.map(
-                    (item) =>
-                      item && (
-                        <Card.Item
-                          key={item.id}
-                          item={item}
-                        >
-                          <Card.Image
-                            src={item.poster}
-                          />
-                          <Card.Meta>
-                            <Card.SubTitle>{item.title}</Card.SubTitle>
-                            <Card.Text>
-                              {descriptionShortener(item.description)}
-                            </Card.Text>
-                          </Card.Meta>
-                        </Card.Item>
-                      )
-                  )}
-                </Card.Entities>
+                <Card.Entities
+                  rowItem={rowItem}
+                  mainCategory={category}
+                />
                 <Card.Feature category={category}>
                   <Player>
                     <Player.Button />
