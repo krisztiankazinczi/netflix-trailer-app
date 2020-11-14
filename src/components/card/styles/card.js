@@ -62,6 +62,7 @@ export const Entities = styled.div`
   flex-direction: row;
   height: 100%;
   width: 100%;
+  margin-right: 20px;
   overflow-x: scroll;
   overflow-y: hidden;
   &::-webkit-scrollbar {
@@ -187,4 +188,14 @@ export const Content = styled.div`
     margin: 30px;
     max-width: none;
   }
+`;
+
+export const LoadingGroup = styled.div`
+  height: 250px;
+  width: 1000px;
+`;
+
+export const LoadingEntity = styled.div`
+  height: 100%;
+  width: 100%;
 `;

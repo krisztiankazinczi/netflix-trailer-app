@@ -60,19 +60,37 @@ Header.Picture = ({ src, ...restProps }) => (
 Header.Search = function HeaderSearch({
   searchTerm,
   setSearchTerm,
+  setLoadMoreMovies,
   ...restProps
 }) {
   const [searchActive, setSearchActive] = useState(false);
 
+  const handleChange = (value) => {
+    if (!searchTerm) {
+      setLoadMoreMovies(true);
+    }
+    setSearchTerm(value);
+    setLoadMoreMovies(false);
+  }
+
+  const handleSearchShow = () => {
+    if (searchActive) {
+      setSearchTerm("");
+      setLoadMoreMovies(true);
+    }
+    setSearchActive((searchActive) => !searchActive)
+
+  }
+
   return (
     <Search {...restProps}>
       <SearchIcon
-        onClick={() => setSearchActive((searchActive) => !searchActive)}>
+        onClick={() => handleSearchShow()}>
         <img src="/images/icons/search.png" alt="Search" />
       </SearchIcon>
       <SearchInput
         value={searchTerm}
-        onChange={({ target }) => setSearchTerm(target.value)}
+        onChange={({ target }) => handleChange(target.value)}
         placeholder="Search films and series"
         active={searchActive}
       />

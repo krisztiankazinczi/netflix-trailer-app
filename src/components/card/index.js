@@ -2,6 +2,8 @@ import React, { useState, useContext, createContext, useRef, useCallback, forwar
 import { usePlayerState } from "../../contexts/player";
 import descriptionShortener from "../../utils/descriptionShortener";
 import useLoadMovies from "../../hooks/useLoadMovies";
+import LazyLoad from 'react-lazy-load';
+
 
 import {
   Container,
@@ -18,6 +20,8 @@ import {
   Entities,
   Item,
   Image,
+  LoadingGroup,
+  LoadingEntity
 } from "./styles/card";
 
 export const FeatureContext = createContext();
@@ -54,7 +58,7 @@ Card.Text = ({ children, ...restProps }) => (
 
 // holds all the movies or series in a category
 // infinite scrolling component
-Card.Entities = function CardEntities({ rowItem, mainCategory, ...restProps }) {
+Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, ...restProps }) {
   const { 
     loading, 
     error, 
@@ -63,6 +67,8 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, ...restProps }) {
 
   const observer = useRef(null);
   const lastMovieElementRef = useCallback(node => {
+    if (!loadMoreMovies) return;
+    
     // I disconnect the previous observer if more data is fetched down
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
@@ -82,46 +88,55 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, ...restProps }) {
           if (rowItem.data.length === index + 1) {
             return (
               item && (
-                <Card.Item
-                  ref={lastMovieElementRef}
-                  key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
-                  item={item}
-                >
-                  <Card.Image
-                    src={item.poster}
-                  />
-                  <Card.Meta>
-                    <Card.SubTitle>{item.title}</Card.SubTitle>
-                    <Card.Text>
-                      {descriptionShortener(item.description)}
-                    </Card.Text>
-                  </Card.Meta>
-                </Card.Item>
+                <LazyLoad offsetHorizontal={400}>
+                  <Card.Item
+                    ref={lastMovieElementRef}
+                    key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
+                    item={item}
+                  >
+                    <LazyLoad offsetHorizontal={400}>
+                      <Card.Image
+                        src={item.poster}
+                      />
+                    </LazyLoad>
+                    <Card.Meta>
+                      <Card.SubTitle>{item.title}</Card.SubTitle>
+                      <Card.Text>
+                        {descriptionShortener(item.description)}
+                      </Card.Text>
+                    </Card.Meta>
+                  </Card.Item>
+                </LazyLoad>
               )
             )
           } else {
             return (
               item && (
                 <Card.Item
-                  key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
-                  item={item}
+                key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
+                item={item}
                 >
-                  <Card.Image
-                    src={item.poster}
-                  />
-                  <Card.Meta>
-                    <Card.SubTitle>{item.title}</Card.SubTitle>
-                    <Card.Text>
-                      {descriptionShortener(item.description)}
-                    </Card.Text>
-                  </Card.Meta>
-                </Card.Item>
+                <LazyLoad offsetHorizontal={400} onContentVisible={() => console.log(item.title)}>
+                    <Card.Image
+                      src={item.poster}
+                    />
+                  </LazyLoad>
+                  <LazyLoad offsetHorizontal={400}>
+                    <Card.Meta>
+                      <Card.SubTitle>{item.title}</Card.SubTitle>
+                      <Card.Text>
+                        {descriptionShortener(item.description)}
+                      </Card.Text>
+                    </Card.Meta>
+                </LazyLoad>
+                  </Card.Item>
               )
             )
           }
         }
           
       )}
+      {loading && <h3>Loading....</h3>}
     </Entities>
   ) 
 }
@@ -175,3 +190,21 @@ Card.Feature = function CardFeature({ children, category, ...restProps }) {
     </Feature>
   ) : null;
 };
+
+Card.LoadingGroup = function CardLoadingGroup() {
+  return (
+    <LoadingGroup>
+      <p>Loading....</p>
+    </LoadingGroup>
+  )
+}
+
+Card.LoadingEntity = function CardLoadingEntity() {
+  return (
+    <LoadingEntity>
+      <p>Loading....</p>
+    </LoadingEntity>
+  )
+}
+
+

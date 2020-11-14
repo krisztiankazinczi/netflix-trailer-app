@@ -21,7 +21,7 @@ const useContent = (mainCategory, categories, url) => {
 
     categories.forEach((category, idx) => {
       // delete this if if lazy loading added!!
-      if (idx < 2) {
+      // if (idx < 2) {
         let page = 1;
         let fetchURL = url.replace("{page}", page);
         fetchURL = fetchURL.replace("{genre}", category.id);
@@ -32,7 +32,7 @@ const useContent = (mainCategory, categories, url) => {
         fetchURL = url.replace("{page}", page);
         fetchURL = fetchURL.replace("{genre}", category.id);
         fetchData(dispatch, fetchURL, category.name, mainCategory);
-      }
+      // }
     });
   }, [categories, dispatch, url]);
 };

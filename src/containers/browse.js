@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import LazyLoad from "react-lazyload";
+
 
 import SelectProfileContainer from "./profiles";
 import { FooterContainer } from "./footer";
@@ -6,10 +8,8 @@ import { FirebaseContext } from "../contexts/firebase";
 import { Header, Loading, Card, Player } from "../components";
 import * as ROUTES from "../constants/routes";
 import logo from "../logo.svg";
-import descriptionShortener from "../utils/descriptionShortener";
 import { PlayerProvider } from "../contexts/player";
 import movieSearch from "../utils/movieSearch";
-import urls from '../movieDB';
 
 
 const BrowseContainer = ({ movies, randomMovie }) => {
@@ -20,6 +20,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
   const { firebase } = useContext(FirebaseContext);
   const user = firebase.auth().currentUser || {};
   const [searchTerm, setSearchTerm] = useState("");
+  const [loadMoreMovies, setLoadMoreMovies] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
@@ -74,6 +75,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
             <Header.Search
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
+              setLoadMoreMovies={setLoadMoreMovies}
             />
             <Header.Profile>
               <Header.Picture src={user.photoURL} />
@@ -103,20 +105,25 @@ const BrowseContainer = ({ movies, randomMovie }) => {
         </Header.Feature>
       </Header>
       {rows && (
-          <Card.Group>
+          <Card.Group style={{marginTop: '40px'}}>
             {Object.values(rows).map((rowItem, id) => (
-              <Card key={`${rowItem.category}-${Math.random() * 1000}`}>
-                <Card.Title>{rowItem.category}</Card.Title>
-                <Card.Entities
-                  rowItem={rowItem}
-                  mainCategory={category}
-                />
-                <Card.Feature category={category}>
-                  <Player>
-                    <Player.Button />
-                  </Player>
-                </Card.Feature>
-              </Card>
+              <LazyLoad placeholder={<Card.LoadingGroup />} offset={500} once>
+                <Card key={`${rowItem.category}-${Math.random() * 1000}`}>
+                  <Card.Title>{rowItem.category}</Card.Title>
+                  <LazyLoad once>
+                    <Card.Entities
+                      rowItem={rowItem}
+                      mainCategory={category}
+                      loadMoreMovies={loadMoreMovies}
+                    />
+                  </LazyLoad>
+                  <Card.Feature category={category}>
+                    <Player>
+                      <Player.Button />
+                    </Player>
+                  </Card.Feature>
+                </Card>
+             </LazyLoad>
             ))}
           </Card.Group>
       )}

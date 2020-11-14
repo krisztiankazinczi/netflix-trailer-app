@@ -5,9 +5,9 @@ const movieSearch = (categories, searchTerm) => {
 
       movies.data.forEach(movie => {
         if (
-          movie.description.toLowerCase().includes(searchTerm)
+          movie?.description.toLowerCase().includes(searchTerm)
           || 
-          movie.title.toLowerCase().includes(searchTerm)
+          movie?.title.toLowerCase().includes(searchTerm)
         ) {
           if (!filteredMovies[cat]) {
             filteredMovies[cat] = {
