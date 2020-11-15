@@ -58,7 +58,7 @@ Card.Text = ({ children, ...restProps }) => (
 
 // holds all the movies or series in a category
 // infinite scrolling component
-Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, ...restProps }) {
+Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, setRowsDisabled, ...restProps }) {
   const { 
     loading, 
     error, 
@@ -73,7 +73,8 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, .
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
-        loadNewMoviesInCategory()
+        setRowsDisabled(true);
+        loadNewMoviesInCategory();
       }
     })
     if (node) observer.current.observe(node)

@@ -13,28 +13,73 @@ async function fetchData(dispatch, fetchUrl, category, mainCategory) {
   return request.data.results;
 }
 
-const useContent = (mainCategory, categories, url) => {
+const useContent = (mainCategory, categories, url, language) => {
   const dispatch = useMoviesDispatch();
 
   useEffect(() => {
     if (!categories) return;
+    
+    dispatch({
+      type: "LOADING_MOVIES_DATA",
+      payload: {
+        loading: true
+      }
+    });
+
+    dispatch({
+      type: "DELETE_EVERY_MOVIES"
+    });
+
+    const urlsToFetch = [];
 
     categories.forEach((category, idx) => {
-      // delete this if if lazy loading added!!
-      // if (idx < 2) {
+
         let page = 1;
         let fetchURL = url.replace("{page}", page);
         fetchURL = fetchURL.replace("{genre}", category.id);
+        fetchURL = fetchURL.replace("{lang}", language.value);
 
-        fetchData(dispatch, fetchURL, category.name, mainCategory);
+        urlsToFetch.push({
+          url: fetchURL,
+          category: category.name
+        });
+
+        // fetchData(dispatch, fetchURL, category.name, mainCategory);
 
         page = 2;
         fetchURL = url.replace("{page}", page);
         fetchURL = fetchURL.replace("{genre}", category.id);
-        fetchData(dispatch, fetchURL, category.name, mainCategory);
-      // }
+        fetchURL = fetchURL.replace("{lang}", language.value);
+
+        urlsToFetch.push({
+          url: fetchURL,
+          category: category.name
+        });
+
+        // fetchData(dispatch, fetchURL, category.name, mainCategory);
+
     });
-  }, [categories, dispatch, url]);
+
+    Promise.all(urlsToFetch.map( data => fetchData(dispatch, data.url, data.category, mainCategory)))
+      .then(done => {
+        dispatch({
+          type: "LOADING_MOVIES_DATA",
+          payload: {
+            loading: false
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: "LOADING_MOVIES_DATA",
+          payload: {
+            loading: false
+          }
+        });
+      })
+
+  }, [categories, dispatch, url, language]);
 };
 
 export default useContent;

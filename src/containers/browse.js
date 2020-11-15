@@ -12,7 +12,7 @@ import { PlayerProvider } from "../contexts/player";
 import movieSearch from "../utils/movieSearch";
 
 
-const BrowseContainer = ({ movies, randomMovie }) => {
+const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomMovie }) => {
   const [category, setCategory] = useState("films");
   const [rows, setRows] = useState(null);
   const [profile, setProfile] = useState({});
@@ -21,6 +21,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
   const user = firebase.auth().currentUser || {};
   const [searchTerm, setSearchTerm] = useState("");
   const [loadMoreMovies, setLoadMoreMovies] = useState(true);
+  const [rowsDisabled, setRowsDisabled] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
@@ -30,6 +31,13 @@ const BrowseContainer = ({ movies, randomMovie }) => {
 
   // show films or tv series
   useEffect(() => {
+
+    if (rowsDisabled) return;
+
+    if (!movies[category]) {
+      setRows(null)
+    }
+    console.log("lefut ez a kod?")
     setRows(movies[category]);
   }, [movies, category]);
 
@@ -54,7 +62,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
   return profile.displayName ? (
     <>
     <PlayerProvider>
-      {loading ? <Loading src={user.photoURL} /> : <Loading.ReleaseBody />}
+      {loading || loadingMovies ? <Loading src={user.photoURL} /> : <Loading.ReleaseBody />}
 
       <Header src={randomMovie.poster} dontShowOnSmallViewPort>
         <Header.Frame>
@@ -72,10 +80,16 @@ const BrowseContainer = ({ movies, randomMovie }) => {
             </Header.TextLink>
           </Header.Group>
           <Header.Group>
+            <Header.LangDropDown
+              language={language}
+              setLanguage={setLanguage}
+              setRowsDisabled={setRowsDisabled}
+            />
             <Header.Search
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               setLoadMoreMovies={setLoadMoreMovies}
+              setRowsDisabled={setRowsDisabled}
             />
             <Header.Profile>
               <Header.Picture src={user.photoURL} />
@@ -115,6 +129,7 @@ const BrowseContainer = ({ movies, randomMovie }) => {
                       rowItem={rowItem}
                       mainCategory={category}
                       loadMoreMovies={loadMoreMovies}
+                      setRowsDisabled={setRowsDisabled}
                     />
                   </LazyLoad>
                   <Card.Feature category={category}>

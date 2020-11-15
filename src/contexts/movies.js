@@ -23,30 +23,44 @@ const moviesReducer = (state, action) => {
         },
       };
 
+    case "LOADING_MOVIES_DATA":
+      return {
+        ...state,
+        loadingMovies: action.payload.loading
+      }
+
+    // case "ADD_ALL_MOVIES":
+    //   return {
+    //     ...state,
+
+    //   }
+
     case "ADD_MOVIES_TO_CATEGORY":
+      const { mainCategory, category, data } = action.payload;
+
       if (
-        state.movies[action.payload.mainCategory] !== null &&
-        state.movies?.[action.payload.mainCategory]?.[action.payload.category]
+        state.movies[mainCategory] !== null &&
+        state.movies?.[mainCategory]?.[category]
       ) {
         // if category already exists, just add the new movies to that list
         return {
           ...state,
           movies: {
             ...state.movies,
-            [action.payload.mainCategory]: {
-              ...state.movies[action.payload.mainCategory],
-              [action.payload.category]: {
-                ...state.movies[action.payload.mainCategory][
-                  action.payload.category
+            [mainCategory]: {
+              ...state.movies[mainCategory],
+              [category]: {
+                ...state.movies[mainCategory][
+                  category
                 ],
-                page: (state.movies[action.payload.mainCategory][
-                  action.payload.category
+                page: (state.movies[mainCategory][
+                  category
                 ].page += 1),
                 data: [
-                  ...state.movies[action.payload.mainCategory][
-                    action.payload.category
+                  ...state.movies[mainCategory][
+                    category
                   ].data,
-                  ...action.payload.data,
+                  ...data,
                 ],
               },
             },
@@ -58,16 +72,25 @@ const moviesReducer = (state, action) => {
         ...state,
         movies: {
           ...state.movies,
-          [action.payload.mainCategory]: {
-            ...state.movies[action.payload.mainCategory],
-            [action.payload.category]: {
+          [mainCategory]: {
+            ...state.movies[mainCategory],
+            [category]: {
               page: 1,
-              data: action.payload.data,
-              category: action.payload.category,
+              data: data,
+              category: category,
             },
           },
         },
       };
+
+    case "DELETE_EVERY_MOVIES":
+      return {
+        ...state,
+        movies: {
+          films: null,
+          series: null
+        }
+      }
 
     default:
       throw new Error(`Unknown action type ${action.type}`);
@@ -81,6 +104,7 @@ export const MoviesProvider = ({ children }) => {
       series: null,
     },
     categories: null,
+    loadingMovies: false
   });
 
   return (

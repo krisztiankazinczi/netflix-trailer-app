@@ -1,5 +1,7 @@
 import styled from "styled-components/macro";
 import { Link } from "react-router-dom";
+import ReactDropdown from 'react-dropdown';
+
 
 export const Background = styled.div`
   display: flex;
@@ -213,4 +215,14 @@ export const PlayButton = styled.button`
     background-color: #ff1e1e;
     color: white;
   }
+`;
+
+export const LangDropDown = styled(ReactDropdown)`
+  cursor: pointer;
+  margin-right: 20px;
+  color: #E50914;
+  font-size: 20px;
+  border: 1px solid #E50914;
+  padding: 5px;
+  border-radius: 2px;
 `;

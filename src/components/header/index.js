@@ -20,6 +20,7 @@ import {
   SearchIcon,
   SearchInput,
   PlayButton,
+  LangDropDown
 } from "./styles/header";
 
 export default function Header({ bg = true, children, ...restProps }) {
@@ -57,15 +58,45 @@ Header.Picture = ({ src, ...restProps }) => (
   <Picture {...restProps} src={`/images/users/${src}.png`} />
 );
 
+Header.LangDropDown = function HeaderLangDropDown({ language, setLanguage, setRowsDisabled, ...restProps }) {
+
+  // in react-dropdown this is the way I can create options with different label and value pairs!!!
+  // label will be visible on the site and I can use the value for fetching data!!!
+  const languageOptions = [
+    { label: "en", value: "en-US" },
+    { label: "hu", value: "hu-HU" },
+    { label: "de", value: "de-DE" },
+  ]
+
+  // this is the way how react-dropdown handle the onChange!!!
+  const handleChange = (option) => {
+    setRowsDisabled(false)
+    setLanguage(option);
+  }
+
+  return (
+    <LangDropDown 
+      options={languageOptions} 
+      onChange={handleChange} 
+      value={language} 
+      {...restProps}
+    />
+  )
+
+}
+
 Header.Search = function HeaderSearch({
   searchTerm,
   setSearchTerm,
   setLoadMoreMovies,
+  setRowsDisabled,
   ...restProps
 }) {
   const [searchActive, setSearchActive] = useState(false);
 
   const handleChange = (value) => {
+    setRowsDisabled(false)
+
     if (!searchTerm) {
       setLoadMoreMovies(true);
     }
