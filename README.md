@@ -1,5 +1,7 @@
 # Trailer watcher app with netflix design
 
+### The app is deployed here: https://netflix-trailer.herokuapp.com/
+<br />
 This app is cloning the design of Netflix, but basically it is a trailer watcher app with not only netflix movies or serieses. <br /><br />
 If the user is not signed in then the landing page of Netflix is visible:
 
