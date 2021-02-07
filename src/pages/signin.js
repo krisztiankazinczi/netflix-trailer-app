@@ -61,6 +61,7 @@ function Signin() {
             <Form.Input
               placeholder="Password"
               autoComplete="off"
+              type="password"
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />

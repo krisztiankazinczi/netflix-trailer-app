@@ -77,7 +77,7 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, l
       }
     })
     if (node) observer.current.observe(node)
-  }, [])
+  }, [loadMoreMovies, loadNewMoviesInCategory])
 
   return (
     <Entities 
@@ -88,7 +88,7 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, l
           if (rowItem.data.length === index + 1) {
             return (
               item && (
-                <LazyLoad offsetHorizontal={400}>
+                <LazyLoad offsetHorizontal={400} key={index + Math.random()}>
                   <Card.Item
                     ref={lastMovieElementRef}
                     key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
@@ -116,7 +116,7 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, l
                 key={`${item.id}-${Math.floor(Math.random() * 1000)}`}
                 item={item}
                 >
-                <LazyLoad offsetHorizontal={400} onContentVisible={() => console.log(item.title)}>
+                <LazyLoad offsetHorizontal={400}>
                     <Card.Image
                       src={item.poster}
                     />

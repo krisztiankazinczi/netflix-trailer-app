@@ -102,6 +102,7 @@ export const MoviesProvider = ({ children }) => {
     movies: {
       films: null,
       series: null,
+      trending: null
     },
     categories: null,
     loadingMovies: false

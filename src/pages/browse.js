@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "../axios";
-
 import { useContent } from "../hooks";
-import { useMoviesState, useMoviesDispatch } from "../contexts/movies";
+import { useMoviesState } from "../contexts/movies";
 import urls from "../movieDB";
 import BrowseContainer from "../containers/browse";
-import selectionMap from "../utils/selectionMap";
+
 
 
 const Browse = () => {
@@ -15,24 +13,26 @@ const Browse = () => {
 
 
   useEffect(() => {
-    if (!movies.trending) return;
-    setRandomMovie(
-      movies.trending[Math.floor(Math.random() * movies.trending.length + 1)]
-    );
+      if (!movies?.trending) return;
+      setRandomMovie(
+        movies.trending[Math.floor(Math.random() * movies.trending.length + 1)]
+      );
   }, [movies?.trending]);
 
   useContent("films", categories?.films, urls.discoverMovies, language);
   useContent("series", categories?.series, urls.discoverTVSeries, language);
 
-  return (
-    <BrowseContainer 
-      movies={movies} 
-      loadingMovies={loadingMovies}
-      language={language}
-      setLanguage={setLanguage}
-      randomMovie={randomMovie} 
-    />
-  ) 
+  return loadingMovies ? (<div>Loading...</div>) : (
+      <BrowseContainer 
+        movies={movies} 
+        loadingMovies={loadingMovies}
+        language={language}
+        setLanguage={setLanguage}
+        randomMovie={randomMovie} 
+      />
+    )
+  
+  
 };
 
 export default Browse;

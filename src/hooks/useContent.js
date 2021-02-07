@@ -79,7 +79,7 @@ const useContent = (mainCategory, categories, url, language) => {
         });
       })
 
-  }, [categories, dispatch, url, language]);
+  }, [categories, dispatch, url, language, mainCategory]);
 };
 
 export default useContent;

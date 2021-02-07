@@ -33,7 +33,6 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
     if (!movies[category]) {
       setRows(null)
     }
-    console.log("lefut ez a kod?")
     setRows(movies[category]);
   }, [movies, category]);
 
@@ -51,8 +50,7 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
       setRows(null);
     }
 
-  }, [searchTerm]);
-
+  }, [category, movies, searchTerm]);
 
 
   return profile.displayName ? (
@@ -60,7 +58,7 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
     <PlayerProvider>
       {loading || loadingMovies ? <Loading src={user.photoURL} /> : <Loading.ReleaseBody />}
 
-      <Header src={randomMovie.poster} dontShowOnSmallViewPort>
+        <Header src={randomMovie?.poster ? randomMovie.poster : `${window.location.origin}/images/misc/wonderwoman.jpg`} dontShowOnSmallViewPort>
         <Header.Frame>
           <Header.Group>
             <Header.Logo to={ROUTES.HOME} alt="Netflix" src={logo} />
@@ -103,38 +101,38 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
         </Header.Frame>
         <Header.Feature>
           <Header.FeatureCallOut>
-            Watch {randomMovie.title} Now
+            Watch {randomMovie?.title ? randomMovie.title : 'Wonder Woman 1984'} Now
           </Header.FeatureCallOut>
-          <Header.Text>{randomMovie.description}</Header.Text>
-          <Header.PlayButton movieTitle={randomMovie.title}>Play</Header.PlayButton>
+          <Header.Text>{randomMovie?.description ? randomMovie?.description : 'Wonder Woman comes into conflict with the Soviet Union during the Cold War in the 1980s and finds a formidable foe by the name of the Cheetah.'}</Header.Text>
+          <Header.PlayButton movieTitle={randomMovie?.title ? randomMovie.title : 'Wonder Woman 1984'}>Play</Header.PlayButton>
           <Player>
             <Player.Video />
           </Player>
         </Header.Feature>
       </Header>
       {rows && (
-          <Card.Group style={{marginTop: '40px'}}>
-            {Object.values(rows).map((rowItem, id) => (
-              <LazyLoad placeholder={<Card.LoadingGroup />} offset={500} once>
-                <Card key={`${rowItem.category}-${Math.random() * 1000}`}>
-                  <Card.Title>{rowItem.category}</Card.Title>
-                  <LazyLoad once>
-                    <Card.Entities
-                      rowItem={rowItem}
-                      mainCategory={category}
-                      loadMoreMovies={loadMoreMovies}
-                      language={language}
-                    />
-                  </LazyLoad>
-                  <Card.Feature category={category}>
-                    <Player>
-                      <Player.Button />
-                    </Player>
-                  </Card.Feature>
-                </Card>
-             </LazyLoad>
-            ))}
-          </Card.Group>
+        <Card.Group style={{marginTop: '40px'}}>
+          {Object.values(rows).map((rowItem, id) => (
+            <LazyLoad key={`${rowItem.category}-${Math.random() * 1000}`} placeholder={<Card.LoadingGroup />} offset={500} once>
+              <Card>
+                <Card.Title>{rowItem.category}</Card.Title>
+                <LazyLoad once>
+                  <Card.Entities
+                    rowItem={rowItem}
+                    mainCategory={category}
+                    loadMoreMovies={loadMoreMovies}
+                    language={language}
+                  />
+                </LazyLoad>
+                <Card.Feature category={category}>
+                  <Player>
+                    <Player.Button />
+                  </Player>
+                </Card.Feature>
+              </Card>
+            </LazyLoad>
+          ))}
+        </Card.Group>
       )}
       </PlayerProvider>
       <FooterContainer />
