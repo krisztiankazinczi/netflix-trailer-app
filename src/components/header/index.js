@@ -10,6 +10,7 @@ import {
   Container,
   Logo,
   ButtonLink,
+  DemoButtonLink,
   Text,
   TextLink,
   Group,
@@ -151,5 +152,9 @@ Header.Logo = function HeaderLogo({ to, ...restProps }) {
 
 Header.ButtonLink = function HeaderButtonLink({ children, ...restProps }) {
   return <ButtonLink {...restProps}>{children}</ButtonLink>;
+};
+
+Header.DemoButtonLink = function HeaderDemoButtonLink({ children, ...restProps }) {
+  return <DemoButtonLink {...restProps}>{children}</DemoButtonLink>;
 };
 

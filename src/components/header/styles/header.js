@@ -62,6 +62,25 @@ export const ButtonLink = styled(Link)`
   }
 `;
 
+export const DemoButtonLink = styled.div`
+  display: block;
+  background-color: #e50914;
+  margin-right: '10px';
+  height: fit-content;
+  color: white;
+  border: 0;
+  font-size: 15px;
+  border-radius: 3px;
+  padding: 8px 17px;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+
+  &:hover {
+    background: #f40612;
+  }
+`;
+
 // with this I can override an other styled component
 export const Feature = styled(Container)`
   padding: 150px 0 500px 0;
