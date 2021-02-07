@@ -21,7 +21,6 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
   const user = firebase.auth().currentUser || {};
   const [searchTerm, setSearchTerm] = useState("");
   const [loadMoreMovies, setLoadMoreMovies] = useState(true);
-  const [rowsDisabled, setRowsDisabled] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,9 +30,6 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
 
   // show films or tv series
   useEffect(() => {
-
-    if (rowsDisabled) return;
-
     if (!movies[category]) {
       setRows(null)
     }
@@ -83,13 +79,11 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
             <Header.LangDropDown
               language={language}
               setLanguage={setLanguage}
-              setRowsDisabled={setRowsDisabled}
             />
             <Header.Search
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               setLoadMoreMovies={setLoadMoreMovies}
-              setRowsDisabled={setRowsDisabled}
             />
             <Header.Profile>
               <Header.Picture src={user.photoURL} />
@@ -129,7 +123,7 @@ const BrowseContainer = ({ movies, loadingMovies, language, setLanguage, randomM
                       rowItem={rowItem}
                       mainCategory={category}
                       loadMoreMovies={loadMoreMovies}
-                      setRowsDisabled={setRowsDisabled}
+                      language={language}
                     />
                   </LazyLoad>
                   <Card.Feature category={category}>

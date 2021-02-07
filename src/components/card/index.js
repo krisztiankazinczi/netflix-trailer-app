@@ -58,12 +58,12 @@ Card.Text = ({ children, ...restProps }) => (
 
 // holds all the movies or series in a category
 // infinite scrolling component
-Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, setRowsDisabled, ...restProps }) {
+Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, language, ...restProps }) {
   const { 
     loading, 
     error, 
     loadNewMoviesInCategory 
-  } = useLoadMovies(mainCategory, rowItem.category);
+  } = useLoadMovies(mainCategory, rowItem.category, language);
 
   const observer = useRef(null);
   const lastMovieElementRef = useCallback(node => {
@@ -73,7 +73,6 @@ Card.Entities = function CardEntities({ rowItem, mainCategory, loadMoreMovies, s
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
-        setRowsDisabled(true);
         loadNewMoviesInCategory();
       }
     })

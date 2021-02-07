@@ -58,7 +58,7 @@ Header.Picture = ({ src, ...restProps }) => (
   <Picture {...restProps} src={`/images/users/${src}.png`} />
 );
 
-Header.LangDropDown = function HeaderLangDropDown({ language, setLanguage, setRowsDisabled, ...restProps }) {
+Header.LangDropDown = function HeaderLangDropDown({ language, setLanguage, ...restProps }) {
 
   // in react-dropdown this is the way I can create options with different label and value pairs!!!
   // label will be visible on the site and I can use the value for fetching data!!!
@@ -70,7 +70,6 @@ Header.LangDropDown = function HeaderLangDropDown({ language, setLanguage, setRo
 
   // this is the way how react-dropdown handle the onChange!!!
   const handleChange = (option) => {
-    setRowsDisabled(false)
     setLanguage(option);
   }
 
@@ -89,14 +88,11 @@ Header.Search = function HeaderSearch({
   searchTerm,
   setSearchTerm,
   setLoadMoreMovies,
-  setRowsDisabled,
   ...restProps
 }) {
   const [searchActive, setSearchActive] = useState(false);
 
   const handleChange = (value) => {
-    setRowsDisabled(false)
-
     if (!searchTerm) {
       setLoadMoreMovies(true);
     }
@@ -156,3 +152,4 @@ Header.Logo = function HeaderLogo({ to, ...restProps }) {
 Header.ButtonLink = function HeaderButtonLink({ children, ...restProps }) {
   return <ButtonLink {...restProps}>{children}</ButtonLink>;
 };
+

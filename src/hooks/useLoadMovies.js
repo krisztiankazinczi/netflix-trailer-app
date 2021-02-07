@@ -16,7 +16,7 @@ async function fetchData(dispatch, fetchUrl, category, mainCategory, setLoading)
   return request.data.results;
 }
 
-export default function useLoadMovies(mainCategory, category) {
+export default function useLoadMovies(mainCategory, category, language) {
   const { movies, categories } = useMoviesState();
   const dispatch = useMoviesDispatch();
   const [loading, setLoading] = useState(false);
@@ -26,6 +26,7 @@ export default function useLoadMovies(mainCategory, category) {
 
   const genre = categories[mainCategory].find(catDetails => catDetails.name === category);
   fetchUrl = fetchUrl.replace("{genre}", genre.id);
+  fetchUrl = fetchUrl.replace("{lang}", language.value);
 
   const loadNewMoviesInCategory = () => {
     setLoading(true)
